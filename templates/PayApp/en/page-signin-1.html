@@ -1,0 +1,143 @@
+{% extends './base.html' %}
+{% block css %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/intl-tel-input@20.1.0/build/css/intlTelInput.css">
+<style>
+    .iti.iti--allow-dropdown.iti--show-flags {
+        width: 100%;
+    }
+    input#phone {
+        padding-left: 81px !important;
+    }
+    input#c2 {
+        padding-left: 61px !important;
+    }
+</style>
+{% endblock css %}
+{% block content %}
+<!-- Page Wrapper-->
+<div id="page">
+
+    <!-- Page Content - Only Page Elements Here-->
+    <div class="page-content my-0 py-0">
+
+        <div class="card bg-5 card-fixed">
+            <div class="card-center mx-3 px-4 py-4 bg-white rounded-m">
+                <h1 class="font-30 font-800 mb-0">Login</h1>
+                <p></p>
+                <div class="form-custom form-label form-border form-icon mb-3 bg-transparent">
+                    <input type="tel" id='phone' name='phone' class="form-control rounded-xs"   placeholder="" />
+                    <label for="tel" class="color-theme">Phone Number </label>
+                </div>
+                <div class="form-custom form-label form-border form-icon mb-4 bg-transparent">
+                    <i class="bi bi-asterisk font-13"></i>
+                    <input type="password" class="form-control rounded-xs" id="c2" placeholder="Password"/>
+                    <label for="c2" class="color-theme">Password</label>
+                </div>
+                <div class="form-check form-check-custom">
+                    <input class="form-check-input" type="checkbox" name="type" value="" id="c2a">
+                    <label class="form-check-label font-12" for="c2a">Remember this account</label>
+                    <i class="is-checked color-highlight font-13 bi bi-check-circle-fill"></i>
+                    <i class="is-unchecked color-highlight font-13 bi bi-circle"></i>
+                </div>
+                <a href="#" class="btn btn-full gradient-highlight shadow-bg shadow-bg-s mt-4" id="login-btn">SIGN IN</a>
+                <div class="row">
+                    <div class="col-6 text-start">
+                        <a href="#" class="font-11 color-theme opacity-40 pt-4 d-block">Forgot Password?</a>
+                    </div>
+                    <div class="col-6 text-end">
+                        <a href="{% url "register" %}" class="font-11 color-theme opacity-40 pt-4 d-block">Create Account</a>
+                    </div>
+                </div>
+            </div>
+            <div class="card-overlay rounded-0 m-0 bg-black opacity-70"></div>
+        </div>
+
+    </div>
+    <!-- End of Page Content-->
+
+    <!-- Off Canvas and Menu Elements-->
+    <!-- Always outside the Page Content-->
+
+
+
+</div>
+<!-- End of Page ID-->
+
+{% endblock %}
+
+{% block js %}
+
+<script src="https://cdn.jsdelivr.net/npm/intl-tel-input@20.1.0/build/js/intlTelInput.min.js"></script>
+<script>
+  const input = document.querySelector("#phone");
+  var phoneInputOBJ = window.intlTelInput(input, {
+    utilsScript: "https://cdn.jsdelivr.net/npm/intl-tel-input@20.1.0/build/js/utils.js",
+    initialCountry: "tn",
+    showSelectedDialCode: true,
+    preferredCountries: ['tn', 'dz', 'eg', 'ly', 'gm', 'bh', 'dz', 'eg', 'ly', 'gm', 'bh', 'dz', 'eg', 'ly', 'gm', 'bh'],
+    formatAsYouType : false
+    
+  });
+</script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const phoneInput = document.querySelector("#phone");
+      const passwordInput = document.querySelector("#c2");
+  
+      // Function to validate form inputs
+      function validateForm() {
+        const phone = phoneInput.value.trim();
+        const password = passwordInput.value.trim();
+  
+        // Check if phone number and password are filled
+        if (!phone || !password) {
+          Swal.fire({
+            icon: 'error',
+            title: 'Incomplete Form',
+            text: 'Please fill in both phone number and password.',
+          });
+          return false;
+        }
+  
+        // Add additional validation logic if needed
+  
+        // If all validations pass, return true
+        return true;
+      }
+  
+      // Event listener for form submission
+      $("#login-btn").on("click", function(event) {
+        event.preventDefault(); // Prevent default form submission
+        
+        // Validate the form
+        if (validateForm()) {
+            const phone = "+" + phoneInputOBJ.getSelectedCountryData().dialCode + $("#phone").val();
+            const password = $("#c2").val();
+            const data = { 
+                phone: phone,
+                password: password
+            };
+            axios.post('{% url "login-api" %}', data)
+                .then(function(response) {
+                    Swal.fire({
+                        icon: 'success', 
+                        title: 'Success!',
+                        text: response.data.success || 'User logged in successfully.',
+                        showConfirmButton: false,
+                        timer: 1500,
+                        timerProgressBar: true,
+                    });
+                })
+                .catch(function(error) {
+                    console.error(error);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: error.response.data.error || 'An error occurred during login.'
+                    });
+                });
+        }
+    });
+    });
+</script>
+{% endblock js %}
