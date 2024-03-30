@@ -1,0 +1,338 @@
+{% extends './base.html' %}
+{% block css %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"/>
+  <link rel="stylesheet" href="https://unicons.iconscout.com/release/v3.0.6/css/line.css">
+<style>
+    #btn-copy {
+            outline: none;
+            cursor: pointer;
+            font-weight: 500;
+            border-radius: 4px;
+            border: 2px solid transparent;
+            transition: background 0.1s linear, border-color 0.1s linear, color 0.1s linear;
+    }
+    .view-modal{
+        top: 10%;
+        left: 90%;
+        color: #e8e4ee;
+        font-weight: bold;
+        font-size: 18px;
+        padding: 10px 25px;
+        background: rgb(113, 5, 156);
+        transform: translate(-50%, -50%);
+      }
+      .popup{
+        position: fixed;
+        z-index: 99;
+        background: rgb(255, 254, 254);
+        padding: 25px;
+        border-radius: 15px;
+        top: 10%;
+        max-width: 380px;
+        width: 100%;
+        opacity: 0;
+        pointer-events: none;
+        box-shadow: 0px 10px 15px rgba(0,0,0,0.1);
+        transform: translate(-50%, -50%) scale(1.2);
+        transition: top 0s 0.2s ease-in-out,
+                    opacity 0.2s 0s ease-in-out,
+                    transform 0.2s 0s ease-in-out;
+      }
+      .popup.show{
+        position: fixed;
+        z-index: 99;
+        top: 50%;
+        left: 50%;
+        opacity: 1;
+        pointer-events: auto;
+        transform:translate(-50%, -50%) scale(1);
+        transition: top 0s 0s ease-in-out,
+                    opacity 0.2s 0s ease-in-out,
+                    transform 0.2s 0s ease-in-out;
+      
+      }
+      .popup :is(header, .icons, .field){
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+      .popup header{
+        padding-bottom: 15px;
+        border-bottom: 1px solid #ebedf9;
+      }
+      header span{
+        font-size: 21px;
+        font-weight: 600;
+      }
+      header .close, .icons a{
+        display: flex;
+        align-items: center;
+        border-radius: 50%;
+        justify-content: center;
+        transition: all 0.3s ease-in-out;
+      } 
+      header .close{
+        color: #878787;
+        font-size: 17px;
+        background: #f3f3f3;
+        height: 33px;
+        width: 33px;
+        cursor: pointer;
+      }
+      header .close:hover{
+        background: #ebedf9;
+      }
+      .popup .content{
+        margin: 20px 0;
+      }
+      .popup .icons{
+        margin: 15px 0 20px 0;
+      }
+      .content p{
+        font-size: 16px;
+      }
+      .content .icons a{
+        height: 50px;
+        width: 50px;
+        font-size: 20px;
+        text-decoration: none;
+        border: 1px solid transparent;
+      }
+      .icons a i{
+        transition: transform 0.3s ease-in-out;
+      }
+      .icons a:nth-child(1){
+        color: #1877F2;
+        border-color: #b7d4fb;
+      }
+      .icons a:nth-child(1):hover{
+        background: #1877F2;
+      }
+      .icons a:nth-child(2){
+        color: #46C1F6;
+        border-color: #b6e7fc;
+      }
+      .icons a:nth-child(2):hover{
+        background: #46C1F6;
+      }
+      .icons a:nth-child(3){
+        color: #e1306c;
+        border-color: #f5bccf;
+      }
+      .icons a:nth-child(3):hover{
+        background: #e1306c;
+      }
+      .icons a:nth-child(4){
+        color: #25D366;
+        border-color: #bef4d2;
+      }
+      .icons a:nth-child(4):hover{
+        background: #25D366;
+      }
+      .icons a:nth-child(5){
+        color: #0088cc;
+        border-color: #b3e6ff;
+      }
+      .icons a:nth-child(5):hover{
+        background: #0088cc;
+      }
+      .icons a:hover{
+        color: #fff;
+        border-color: transparent;
+      }
+      .icons a:hover i{
+        transform: scale(1.2);
+      }
+      .content .field{
+        margin: 12px 0 -5px 0;
+        height: 45px;
+        border-radius: 4px;
+        padding: 0 5px;
+        border: 1px solid #757171;
+      }
+      .field.active{
+        border-color: #7d2ae8;
+      }
+      .field i{
+        width: 50px;
+        font-size: 18px;
+        text-align: center;
+      }
+      .field.active i{
+        color: #7d2ae8;
+      }
+      .field input{
+        width: 100%;
+        height: 100%;
+        border: none;
+        outline: none;
+        font-size: 15px;
+      }
+      .field button{
+        color: #fff;
+        padding: 5px 18px;
+        background: #7d2ae8;
+      }
+      .field button:hover{
+        background: #8d39fa;
+      }
+</style>
+{% endblock css %}
+{% block content %}
+{% load static %}
+<!-- Page Wrapper-->
+<div id="page">
+
+    <!-- Footer Bar -->
+    <div id="footer-bar" class="footer-bar-1 footer-bar-detached">
+        <a href="page-wallet.html"><i class="bi bi-wallet2"></i><span>المحفظة</span></a>
+        <a href="page-activity.html"><i class="bi bi-graph-up"></i><span>الانشطة</span></a>
+        <a href="index.html" class="circle-nav-2"><i class="bi bi-house-fill"></i><span>الرئيسية</span></a>
+        <a href="page-payments.html"><i class="bi bi-receipt"></i><span>المدفوعات</span></a>
+        <a href="#" data-bs-toggle="offcanvas" data-bs-target="#menu-sidebar"><i class="bi bi-three-dots"></i><span>المزيد</span></a>
+    </div>
+
+    <!-- Page Content - Only Page Elements Here-->
+    <div class="page-content footer-clear">
+
+        <!-- Page Title-->
+        <div class="pt-3">
+            <div class="page-title d-flex">
+                <div class="align-self-center me-auto">
+                    <p class="color-highlight">رمز الدعوة الخاص بك</p>
+                    <h1 class="color-theme">{{user.profile.invitation_code}}</h1>
+                </div>
+                <div class="align-self-center ms-auto">
+                    <a href="#" data-bs-toggle="offcanvas" data-bs-target="#menu-sidebar"
+                    class="icon gradient-highlight color-white shadow-bg shadow-bg-xs rounded-m">
+                        <i class="bi bi-list font-20"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="card card-style bg-2" style="height:150px">
+            <div class="card-bottom p-3">
+                <h1 class="color-white mb-0">كون فريقك الان</h1>
+                <p class="color-white mb-0 opacity-60">
+                    و احصل على مكافأت قيمة.
+                </p>
+            </div>
+            <div class="card-overlay bg-gradient-fade"></div>
+        </div>
+
+        <div class="card card-style">
+            <div class="content mb-0 mt-2">
+                <h6 class="opacity-30 pb-1">بيانات الاحالات</h6>
+                <div class="divider mb-0"></div>
+                <div class="list-group list-custom list-group-m list-group-flush rounded-xs overflow-visible check-visited">
+                    <a href="#" class="list-group-item">
+                        <i class="has-bg gradient-red shadow-bg shadow-bg-xs color-white rounded-xs bi bi-heart-fill font-14"></i>
+                        <div><strong class="font-600">عدد المدعويين : 0</strong></div>
+                        <i class="bi bi-chevron-right"></i>
+                    </a>
+                    <a href="#" class="list-group-item">
+                        <i class="has-bg gradient-blue shadow-bg shadow-bg-xs color-white rounded-xs bi bi-currency-dollar font-14"></i>
+                        <div><strong class="font-600">رصيد مكافأت الاحالة : 0$</strong></div>
+                        <i class="bi bi-chevron-right"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="card card-style">
+            <div class="content">
+                <div class="bg-transparent rounded-m px-3 py-4 text-center">
+                    <h1 class="font-28 mb-0">شارك رابط الدعوة</h1>
+                    <p class="color-blue-dark mb-2">و احصل على 3$ على كل احالة. </p>
+                    <p class="font-14">
+                    قم بمساعدة الاشخاص على تنمية دخلهم و تنمية الاحالات الخاصة بك. 
+                    </p>
+                    <a href="#"  id="view-modal" class="btn btn-l scale-box px-4 gradient-green shadow-bg shadow-bg-xs">مشاركة</a>
+                </div>
+            </div>
+        </div>
+
+
+
+
+
+
+    </div>
+    <div class="popup">
+        <header>
+          <span>قم بزيادة رصيدك</span>
+          <div class="close"><i class="uil uil-times"></i></div>
+        </header>
+        <div class="content">
+          <p>شارك الرابط عبر</p>
+          <ul class="icons">
+            <a href="{{user.profile.media.facebook}}"><i class="fab fa-facebook-f"></i></a>
+            <a href="{{user.profile.media.x}}"><i class="fab fa-twitter"></i></a>
+            <a href="{{user.profile.media.instagram}}"><i class="fab fa-instagram"></i></a>
+            <a href="{{user.profile.media.whatsapp}}"><i class="fab fa-whatsapp"></i></a>
+            <a href="{{user.profile.media.telegram}}"><i class="fab fa-telegram-plane"></i></a>
+          </ul>
+          <p>Or copy link</p>
+          <div class="field">
+            <i class="url-icon uil uil-link"></i>
+            <input type="text" readonly value="{{user.profile.url}}">
+            <button id="btn-copy">نسخ</button>
+          </div>
+        </div>
+      </div>
+    <!-- End of Page Content-->
+
+    <!-- Off Canvas and Menu Elements-->
+    <!-- Always outside the Page Content-->
+
+    <!-- Main Sidebar Menu -->
+    <div id="menu-sidebar"
+        data-menu-active="nav-pages"
+        data-menu-load="menu-sidebar.html"
+        class="offcanvas offcanvas-start offcanvas-detached rounded-m">
+    </div>
+
+	<!-- Highlights Menu -->
+	<div id="menu-highlights"
+		data-menu-load="menu-highlights.html"
+		class="offcanvas offcanvas-bottom offcanvas-detached rounded-m">
+	</div>
+
+
+</div>
+<!-- End of Page ID-->
+
+{% endblock %}
+
+{% block js %}
+<script>
+    const viewBtn = document.querySelector("#view-modal"),
+    popup = document.querySelector(".popup"),
+    close = popup.querySelector(".close"),
+    field = popup.querySelector(".field"),
+    input = field.querySelector("input"),
+    copy = field.querySelector("button");
+
+    viewBtn.onclick = ()=>{ 
+      popup.classList.toggle("show");
+    }
+    close.onclick = ()=>{
+      viewBtn.click();
+    }
+
+    copy.onclick = ()=>{
+      input.select(); //select input value
+      if(document.execCommand("copy")){ //if the selected text is copied
+        field.classList.add("active");
+        copy.innerText = "Copied";
+        setTimeout(()=>{
+          window.getSelection().removeAllRanges(); //remove selection from page
+          field.classList.remove("active");
+          copy.innerText = "Copy";
+        }, 3000);
+      }
+    }
+</script>
+
+{% endblock js %}

@@ -1,0 +1,85 @@
+<!DOCTYPE HTML>
+<html lang="ar" dir="rtl">
+    {% load static %}
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, viewport-fit=cover" />
+<title>Bitrader - Finance</title>
+<link rel="stylesheet" type="text/css" href="{% static "PayApp/styles/bootstrap.css"%}">
+<link rel="stylesheet" type="text/css" href="{% static "PayApp/fonts/bootstrap-icons.css"%}">
+<link rel="stylesheet" type="text/css" href="{% static "PayApp/styles/style.css"%}">
+<link rel="preconnect" href="https://fonts.gstatic.com">
+<link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@500;600;700&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="manifest" href="{% static "PayApp/_manifest.json"%}">
+<meta id="theme-check" name="theme-color" content="#FFFFFF">
+<link rel="apple-touch-icon" sizes="180x180" href="app/icons/icon-192x192.png">
+<meta property="og:title" content="Bitrader: Your Premier Destination for Digital Currency Investment">
+<meta property="og:site_name" content=Bitrader>
+<meta property="og:url" content="https://bitrader.com">
+<meta property="og:description" content="Welcome to Bitrader, your premier destination for digital currency investment. At Bitrader, we offer a comprehensive platform designed to empower investors with the tools and insights needed to navigate the exciting world of cryptocurrencies. Whether you're a seasoned trader or new to the market, Bitrader provides a user-friendly interface, real-time market data, and expert analysis to help you make informed investment decisions. Join us on Bitrader and unlock the potential of digital assets today.">
+<meta property="og:type" content="website">
+<meta property="og:image" content="{% static 'Bitrader/images/og-ar.webp' %}">
+
+
+
+<link rel="shortcut icon" href="{% static 'Bitrader/images/favicon.png' %}" type="image/x-icon">
+{% block css %}{% endblock css %}
+</head>
+
+<body class="theme-light">
+
+<div id="preloader"><div class="spinner-border color-highlight" role="status"></div></div>
+
+{% block content %}
+{% endblock %}
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script src="{% static "PayApp/scripts/bootstrap.min.js"%}"></script>
+<script src="{% static "PayApp/scripts/custom.js"%}"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+
+    window.onpopstate = function(event) {
+        console.log("URL changed:", window.location.href);
+        // You can perform actions here based on the URL change
+    };
+    window.onhashchange = function() {
+        console.log("Hash changed:", window.location.hash);
+        // You can perform actions here based on the hash change
+    };
+});
+
+function handleInvitationCode() {
+    // Get the URL query string
+    const queryString = window.location.search;
+    
+    // Create a URLSearchParams object from the query string
+    const params = new URLSearchParams(queryString);
+    
+    // Get the value of the 'invitation_code' parameter
+    const invitationCode = params.get('invitation_code');
+    
+    // Check if the invitation code is present
+    if (invitationCode) {
+        console.log("Invitation code:", invitationCode);
+        // Set the 'invitation_code' cookie
+        document.cookie = `invitation_code=${invitationCode}; expires=Fri, 31 Dec 9999 23:59:59 GMT; path=/`;
+        console.log("Invitation code set in cookie.");
+        // You can perform further actions with the invitation code here
+    } else {
+        console.log("No invitation code provided.");
+    }
+}
+
+// Call the function to execute the logic
+handleInvitationCode();
+
+        
+</script>
+{% block js %}
+{% endblock js %}
+</body>
