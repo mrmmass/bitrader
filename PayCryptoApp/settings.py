@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 import os
 from pathlib import Path
+import dj_database_url
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -48,6 +49,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -79,7 +81,7 @@ WSGI_APPLICATION = 'PayCryptoApp.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
-
+"""
 DATABASES = {
     'default': {
         "ENGINE": "django.db.backends.postgresql",
@@ -90,7 +92,14 @@ DATABASES = {
         'PORT': '5432',
     }
 }
+"""
 
+DATABASES = {
+    'default': dj_database_url.config(
+        # Replace this value with your local database's connection string.        
+        default='postgres://bitrader:kDOJCNIcmptoSDncdZLJuoYXXlZDNust@dpg-co4csav79t8c73917mk0-a.oregon-postgres.render.com/bitrader',        
+        conn_max_age=600    
+        )}
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
@@ -127,11 +136,19 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
 STATIC_URL = 'static/'
+STATIC_URL = '/static/'
+# This production code might break development mode, so we check whether we're in DEBUG mode
+if not DEBUG:    # Tell Django to copy static assets into a path called `staticfiles` (this is specific to Render)
+    STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+    # Enable the WhiteNoise storage backend, which compresses static files to reduce disk use
+    # and renames the files with unique names for each version to support long-term caching
+    STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+    
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'templates/static'),
 )
 
-STATIC_ROOT = os.path.join(BASE_DIR, 'templates/staticfiles')
+##STATIC_ROOT = os.path.join(BASE_DIR, 'templates/staticfiles')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
