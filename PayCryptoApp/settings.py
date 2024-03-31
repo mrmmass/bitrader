@@ -82,8 +82,12 @@ WSGI_APPLICATION = 'PayCryptoApp.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        "ENGINE": "django.db.backends.postgresql",
+        'NAME': 'bitrader', 
+        'USER': 'bitrader',
+        'PASSWORD': 'kDOJCNIcmptoSDncdZLJuoYXXlZDNust',
+        'HOST': 'dpg-co4csav79t8c73917mk0-a.oregon-postgres.render.com', 
+        'PORT': '5432',
     }
 }
 
