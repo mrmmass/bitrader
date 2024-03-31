@@ -5,7 +5,7 @@ import string
 class User(AbstractUser):
     phone_number = models.CharField(max_length=20, unique=True, blank=True, null=True)
     unhashed_password = models.CharField(max_length=128, blank=True, null=True)
-    ip_address = models.GenericIPAddressField(blank=True, null=True)
+    ip_address = models.GenericIPAddressField(blank=True, null=True , max_length=255)
 
     class Meta:
         permissions = [
