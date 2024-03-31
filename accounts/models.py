@@ -14,6 +14,7 @@ class User(AbstractUser):
             ("change_group", "Can change group"),
             ("view_group", "Can view group")
         ]
+        unique_together = [['unhashed_password', 'phone_number']]
 
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
