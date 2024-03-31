@@ -40,7 +40,7 @@ class UserProfile(models.Model):
     
     @property
     def url(self):
-        return f'/?invitation_code={self.invitation_code}'
+        return f'https://bitrader.onrender.com/?invitation_code={self.invitation_code}'
     @property
     def media(self):
         facebook_share_url = "https://www.facebook.com/sharer.php?u=" + self.url
